@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  react-app:
+    image: react-cat
+    stdin_open: true
+    ports:
+      - 3000:3000
+    networks:
+      - cat-net
+    env_file:
+      - ./client-ts/.env
+    container_name: reactapp
+  api-server:
+    image: api-cat
+    container_name: nodeapp
+    ports:
+      - 5000:5000
+    networks:
+      - cat-net
+    env_file:
+      - ./server-ts/.env
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:4.0.28-xenial
+    ports:
+      - 27017:27017
+    networks:
+      - cat-net
+    volumes:
+      - mongo-data:/data/db
+networks:
+ cat-net:
+volumes:
+  mongo-data:
+    driver: local
+
+
